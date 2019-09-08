@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CaptionIt | Create new post</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"
+          integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="simple.css">
+
+</head>
+<body>
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-lg-8">
+            <h2 class="page-header">Create Post</h2>
+        </div>
+        <div class="col-sm-4">
+            <br><br>
+              <a class="btn btn-large btn-primary" href="posts">Home</a>
+        </div>
+    </div>
+    <form action="/post" method="POST" enctype="multipart/form-data">
+      <div class="form-group row">
+        <label for="user_id">User</label>
+        <input class="form-control" type="text" placeholder="email@example.com" value="raj@example.com" id="user_id" readonly name="user_id">
+      </div>
+    <div class="form-group row">
+      <input type="file" class="filestyle" id="picture_file"  name="picture_file">
+      <label class="custom-file-label" for="picture_file">Choose your picture</label>
+    </div>
+      <div class="form-group row">
+        <label for="caption">Caption</label>
+        <textarea class="form-control" id="caption" rows="2" placeholder="your creative caption !" name="caption"></textarea>
+      </div>
+      <div class="form-group row">
+        <label for="category">Category</label>
+        <select class="form-control" id="category" name="category">
+        <option disabled selected value> -- select a category -- </option>
+          <option>Animals</option>
+          <option>Food</option>
+          <option>Sports</option>
+          <option>Movies</option>
+          <option>Entertainment</option>
+          <option>Humor</option>
+          <option>Cars</option>
+          <option>Lifestyle</option>
+          <option>Fashion</option>
+        </select>
+      </div>
+      <div class="form-group row">
+        <label for="tags">Tags</label>
+      <input class="form-control" type="text" placeholder="tags" id="tags" name="tags">
+      </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+</div>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"
+        integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-tagsinput/0.8.0/bootstrap-tagsinput.min.js"
+        crossorigin="anonymous"></script>
+</body>
+</html>
