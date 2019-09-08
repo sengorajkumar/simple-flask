@@ -3,7 +3,10 @@ from flask_pymongo import PyMongo
 from flask_pymongo import ObjectId
 
 app = Flask(__name__)
-app.config["MONGO_URI"] = "mongodb+srv://my_mongodb_usr:peOEvgEyFN7mq3CD@cluster0-mjzfv.mongodb.net/griffindor?retryWrites=true&w=majority"
+#Raj's dev atlas
+#app.config["MONGO_URI"] = "mongodb+srv://my_mongodb_usr:peOEvgEyFN7mq3CD@cluster0-mjzfv.mongodb.net/griffindor?retryWrites=true&w=majority"
+#Team's Atlas
+app.config["MONGO_URI"] = "mongodb+srv://adminUser1:sSFbS6LILMsDnoni@cluster-gryffindor-cbtnr.gcp.mongodb.net/griffindor?retryWrites=true&w=majority"
 mongo = PyMongo(app)
 
 # App route to present create post form
@@ -73,7 +76,6 @@ def post():
     # Display the post once created
     dict_display = {"caption" : caption, "id":str(result.inserted_id),"tags":tags}
     return render_template("display_post.html", post=dict_display)
-
 
 @app.route('/file/<filename>')
 def file(filename):
