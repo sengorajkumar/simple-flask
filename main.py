@@ -6,21 +6,24 @@ app = Flask(__name__)
 app.config["MONGO_URI"] = "mongodb+srv://my_mongodb_usr:peOEvgEyFN7mq3CD@cluster0-mjzfv.mongodb.net/griffindor?retryWrites=true&w=majority"
 mongo = PyMongo(app)
 
-@app.route("/")
-def index():
-    return '''
-    <form action="/post" method="POST" enctype="multipart/form-data">
-                <p>Upload picture : <input type="file" name="picture_file">
-                <p>Caption It     : <input type="text" name="caption" value="caption">
-                <p>Tags           :<input type="text" name="tags" value="tags">
-                <p><button type="submit">Submit</button>
-            </form>
-    '''
-
+# App route to present create post form
 @app.route("/create")
 def create_post():
     return render_template("submit_post.html")
 
+# API to retrieve all the posts
+@app.route("/")
+@app.route('/posts')
+def display_all():
+    ''' Retrieves all the posts available to display in home page'''
+    posts = mongo.db.posts.find()
+    post_list = []
+    for post in posts:
+        print(post['file_name'])
+        post_list.append(post)
+    return render_template("list_posts.html", posts=post_list)
+
+# API to create a post to database
 @app.route("/post", methods=['POST'])
 def post():
 
@@ -29,7 +32,7 @@ def post():
     user = request.form.get('user_id').strip()
     category = request.form.get('category').strip()
 
-    #First insert the tags if its new tag
+    #First insert the tags if its new tag otherwise reference the existing tag
     tags_coll = mongo.db.tags
     list_tag_ids = []
     for tag in tags:
@@ -56,8 +59,9 @@ def post():
     if 'picture_file' in request.files:
         picture_file_obj = request.files.get('picture_file')
         file_name = picture_file_obj.filename
+        # Save the binary file to mongoDB
         mongo.save_file(file_name,picture_file_obj)
-        #result = mongo.db.posts.insert_one({'file_name':file_name,'caption':request.form.get('caption'),'tags':request.form.get('tags')})
+        # Insert a record to posts collection with reference to the saved picture file
         result = mongo.db.posts.insert_one(
             {'file_name': file_name,
              'user' : user,
@@ -66,17 +70,10 @@ def post():
              'tag-ids' :list_tag_ids,
              'category-id' : cat_id
              })
-    #return "Posted successfully : " + str(file_name) + " ID : " + str(result.inserted_id)
-    #return "Posted successfully : " + str(file_name)
+    # Display the post once created
     dict_display = {"caption" : caption, "id":str(result.inserted_id),"tags":tags}
     return render_template("display_post.html", post=dict_display)
 
-    # return f'''
-    #     <h1>{caption}</h1>
-    #     <h3>{str(result.inserted_id)}</h3>
-    #     <h3>{tags}</h3>
-    #     <img src = "{url_for('show', id=str(result.inserted_id))}">
-    # '''
 
 @app.route('/file/<filename>')
 def file(filename):
@@ -97,15 +94,6 @@ def display(id):
         <h3>{post['tags']}</h3>
         <img src = "{url_for('file',filename=post['file_name'])}">
     '''
-
-@app.route('/posts')
-def display_all():
-    posts = mongo.db.posts.find()
-    post_list = []
-    for post in posts:
-        print(post['file_name'])
-        post_list.append(post)
-    return render_template("list_posts.html", posts=post_list)
 
 if __name__=='__main__':
     app.run(debug=1, host="127.0.0.1", port="9090")
